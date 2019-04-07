@@ -55,14 +55,13 @@ for q in range(test_case):
     # converting the values in integers 
     cypher_code_list = []
     for j in range(L):
-        cypher_code_list.append(int(cypher_code_str_list)[j])
+        cypher_code_list.append(int(cypher_code_str_list[j]))
         
     # creating list of prime numbers
     list_prime = list_of_prime(N)
     
     # creating the decrypt list of prime numbers from cyphertext code list
     container = []
-    decrypt = []
     # for each value in cypher_code_list
     for number in cypher_code_list:
         count = 0
@@ -74,51 +73,39 @@ for q in range(test_case):
             elif count == 2:
                 # when received the 2 prime numbers
                 break
-        
-        # 
-        if len(container) == 4:
-            if(countX(container, (container[0])) == 2):
-                decrypt.append(container[1])
-                decrypt.append(container[0])
-                container.remove(container[1])
-                container.remove(container[0])
-            elif(countX(container, (container[1])) == 2):
-                decrypt.append(container[0])
-                decrypt.append(container[1])
-                container.remove(container[1])
-                container.remove(container[0])
-                
-    if(container[0] in decrypt):
-        decrypt.append(container[0])
-        decrypt.append(container[1])
-        container.remove(container[1])
-        container.remove(container[0])
-    elif(container[1] in decrypt):
-        decrypt.append(container[1])
-        decrypt.append(container[0])
-        container.remove(container[1])
-        container.remove(container[0])
-       
-    temp = []
     
-    for i in range(0,len(decrypt), 2):
-        temp.append(decrypt[i])
-    temp.append(decrypt[len(decrypt)-1])
+    # removing the common factors 
+    decrypt = []
+    for i in range(0,len(container)-1,4):
+        if container[i] not in container[i+2:i+4]:
+            decrypt.append(container[i])
+            decrypt.append(container[i+1])
+        else:
+            decrypt.append(container[i+1])
+            decrypt.append(container[i])
         
-    list_prime = temp.copy()
-    list_prime.sort()
-    list_prime = Remove(list_prime)
     
-        # creating list of alphabets
-    list_alpha = []
+    # creating the mapping of character with prime number
+    # taking copy of decrypt prime numbers 
+    mapping_prime_list = decrypt.copy()
+    # removing repeated prime numbers
+    mapping_prime_list = Remove(mapping_prime_list)
+    # sorting them in ascending order
+    mapping_prime_list.sort()
+
+    # creating list of alphabets
+    mapping_alphabet_list = []
+    # using ASCII value
     for letter in range(97,123):
-        list_alpha.append(chr(letter))
+        mapping_alphabet_list.append(chr(letter))
     
-    code = dict(zip(list_prime[::-1], list_alpha[::-1]))
+    # creating a dictionary for mapped values
+    mapping = dict(zip(mapping_prime_list[::-1], mapping_alphabet_list[::-1]))
     
+    # saving result as list
     result = []
     for i in range(L+1):
-        result.append(code[temp[i]].upper())
+        result.append(mapping[decrypt[i]].upper())
         
     print('Case #{}: {}'.format(q+1, ''.join(result)))
         
